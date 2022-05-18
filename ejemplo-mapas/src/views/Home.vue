@@ -1,6 +1,12 @@
 <template>
   <div class="home">
-    <h1>Ejemplo Mapas</h1>
+    <h1>Donde está mi perro</h1>
+    <span>Seleccionado: {{ selected }}</span>
+    <select v-model="selected">
+      <option disabled value="">Seleccione una Región</option>
+      <option v-for="region in regiones">{{region}}</option>
+    </select>
+    
     <div>{{point}} 
       <input type="text" v-model="name" placeholder="nombre" />
       <button type="button" @click="createPoint">Crear</button>
@@ -31,7 +37,9 @@ export default {
       name:'',
       points:[], //colección de puntos cargados de la BD
       message:'', 
-      mymap:null //objeto de mapa(DIV)
+      mymap:null, //objeto de mapa(DIV)
+      selected:'',
+      regiones:['Arica y Parinacota','Tarapacá','Antofagasta','Atacama','Coquimbo','Valparaiso','Metropolitana de Santiago','Libertador General Bernardo O\'Higgins','Maule','Biobio','La Araucanía','Los Ríos','Los Lagos','Aisén del General Carlos Ibáñez del Campo','Magallanes y de la Antártica Chilena']
     }
   },
   computed:{
@@ -79,8 +87,8 @@ export default {
     async getPoints(map){
       try {
         //se llama el servicio 
-        let response = await axios.get('http://localhost:3000/dogs');
-        let dataPoints = response.data;
+        /*let response = await axios.get('http://localhost:3000/dogs');
+        let dataPoints = response.data;*/
         //Se itera por los puntos
         dataPoints.forEach(point => {
 
