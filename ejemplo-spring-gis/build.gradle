@@ -14,9 +14,9 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation group: 'org.sql2o', name: 'sql2o', version: '1.6.0'
-	implementation 'org.postgresql:postgresql:42.2.5'
-	implementation group: 'net.postgis', name: 'postgis-jdbc', version: '2.5.0'
+	compile group: 'org.sql2o', name: 'sql2o', version: '1.6.0'
+	compile 'org.postgresql:postgresql:42.2.5'
+	compile group: 'net.postgis', name: 'postgis-jdbc', version: '2.5.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
