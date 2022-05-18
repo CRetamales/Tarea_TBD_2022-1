@@ -28,6 +28,5 @@ public class DatabaseContext {
         this.dbUrl = dbUrl;
         this.dbUser = dbUser;
         this.dbPass = dbPass;
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+dbUrl+dbUser+dbPass);
     }
 }
