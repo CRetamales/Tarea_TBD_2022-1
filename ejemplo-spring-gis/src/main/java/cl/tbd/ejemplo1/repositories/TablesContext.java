@@ -97,6 +97,10 @@ public class TablesContext {
         con.createQuery("UPDATE dog SET location = ST_MakePoint(longitude, latitude);").executeUpdate();
 
 
+        con.createQuery("ALTER TABLE dog ALTER COLUMN location TYPE geometry(POINT, 32719) USING ST_SetSRID(location,32719);").executeUpdate();
+
+        con.createQuery("ALTER TABLE division_regional ALTER COLUMN geom TYPE geometry(MULTIPOLYGON, 0) USING ST_SetSRID(geom,32719);").executeUpdate();
+
     }
 
 }

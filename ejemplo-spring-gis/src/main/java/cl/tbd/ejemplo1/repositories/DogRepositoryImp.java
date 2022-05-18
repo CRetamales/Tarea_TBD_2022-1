@@ -69,4 +69,24 @@ public class DogRepositoryImp implements DogRepository {
         "FROM division_regional_4326 AS t WHERE t.gid = 5;";
         return null;
     }
+
+    @Override
+    public List<Dog> getAllDogsRegion(String region){
+        try(Connection conn = sql2o.open())
+        {
+            String query = "SELECT dog.*" +
+            "FROM dog"+
+            "JOIN division_regional as regiones"+
+            "ON ST_Intersects(regiones.geom, ST_Transform(dog.location, 32719))"+
+            "WHERE regiones.nom_reg=:region;";
+
+            return conn.createQuery(query)
+                .addParameter("region",region)
+                .executeAndFetch(Dog.class);
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }

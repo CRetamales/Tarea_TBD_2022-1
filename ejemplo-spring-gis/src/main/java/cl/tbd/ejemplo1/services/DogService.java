@@ -8,8 +8,11 @@ import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,6 +61,11 @@ public class DogService {
     public Dog createDog(@RequestBody Dog dog){
         Dog result = dogRepository.createDog(dog);
         return result;
+    }
+
+    @RequestMapping(value = "/dogs/getAllDogsRegion/{name}", method = RequestMethod.GET)
+    public List<Dog> getAllDogsRegion(@PathVariable String name){
+        return dogRepository.getAllDogsRegion(name);
     }
 
     

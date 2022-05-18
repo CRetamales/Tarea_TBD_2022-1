@@ -7,4 +7,5 @@ public interface DogRepository {
     public List<Dog> getAllDogs();
     public Dog createDog(Dog dog);
     public String getJson();
+    public List<Dog> getAllDogsRegion(String region);
 }
