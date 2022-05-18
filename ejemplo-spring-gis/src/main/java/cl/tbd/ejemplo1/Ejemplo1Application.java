@@ -21,12 +21,14 @@ public class Ejemplo1Application {
 		Sql2o sql2o = DatabaseContext.sql2o();
 		try {
 			Connection con = sql2o.open();
-			con.createQuery("create table IF NOT EXISTS dog"
-					+ "(id serial primary key, name text, longitude NUMERIC(5,3), latitude NUMERIC(5,3)) ")
-					.executeUpdate();
+			
 			TablesContext tablas = new TablesContext(con);
-			tablas.crearTablas();
-
+			try{
+				tablas.crearTablas();
+				System.out.println("Se creo la tabla dog");
+			}catch(Sql2oException e){
+				System.out.println("La tabla dog ya existia");
+			}
 			System.out.println("si funciona");
 		} catch (Sql2oException e) {
 			System.out.println("no funciona");

@@ -13,8 +13,9 @@ public class TablesContext {
     public void crearTablas() {
         // CREACION DE TABLAS
         // DOG MODEL id,name, longitude, latitude
-        con.createQuery("create table if not exists dog"
-                + "(id serial primary key, name text, longitude NUMERIC(5,3), latitude NUMERIC(5,3));")
+        con.createQuery("CREATE EXTENSION IF NOT EXISTS postgis;").executeUpdate();
+        con.createQuery("create table dog"
+                + "(id serial primary key, name text, longitude NUMERIC(5,3), latitude NUMERIC(5,3),location geometry(Point, 4326));")
                 .executeUpdate();
 
         con.createQuery(
@@ -93,7 +94,7 @@ public class TablesContext {
                 "insert into dog(name,longitude,latitude) values('rouge', -71.615883, -33.046110);")
                 .executeUpdate();   
 
-      
+        con.createQuery("UPDATE dog SET location = ST_MakePoint(longitude, latitude);").executeUpdate();
 
 
     }
