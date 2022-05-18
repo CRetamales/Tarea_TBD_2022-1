@@ -13,7 +13,13 @@
     </div>
     <div>{{message}}</div>
     <div id="mapid"></div>
+    <div>
+      Busqueda por radio (en mts)
+      <input type="text" v-model="consulta2" placeholder="Ej: 500" />
+      <button type="button" @click="createPoint">Consultar</button>
+    </div>
   </div>
+
 </template>
 <script>
 //Importaciones
