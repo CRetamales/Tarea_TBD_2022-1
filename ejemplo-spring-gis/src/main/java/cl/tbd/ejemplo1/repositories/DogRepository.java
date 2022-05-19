@@ -10,4 +10,5 @@ public interface DogRepository {
     public String getJson();
     public List<Dog> getAllDogsRegion(String region);
     public List<Regionname> getAllRegion();
+    public List<Dog> getDogsByNameLimit (String nombrePerro, int cantidadPerros)
 }

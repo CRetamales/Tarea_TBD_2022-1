@@ -10,6 +10,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Repository
 public class DogRepositoryImp implements DogRepository {
@@ -101,5 +102,28 @@ public class DogRepositoryImp implements DogRepository {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+
+    @Override
+    public List<Dog> getDogsByNameLimit (String nombrePerro, int cantidadPerros) {
+        try(Connection conn = sql2o.open()){
+            String query = "SELECT d1.id AS id1, d2.id AS id2" +
+            "(SELECT ST_Distance(ST_GeogFromText('SRID=4326;POINT(' || d1.longitude || ' ' || d1.latitude || ')'), ST_GeogFromText( 'SRID=4326;POINT(' || d2.longitude || ' ' || d2.latitude || ')')) AS distancia"+
+            "FROM dog AS d1"+
+            "JOIN dog AS d2 ON d1.id <> d2.id"+
+            "WHERE d1.name = :nombrePerro"+
+            "ORDER BY distancia" +
+            "LIMIT: cantidadPerros";
+
+            return conn.createQuery(query)
+                .addParameter("nombrePerro",nombrePerro)
+                .addParameter("cantidadPerros",cantidadPerros)
+                .executeAndFetch(Dog.class);
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+
     }
 }

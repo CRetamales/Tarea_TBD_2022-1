@@ -76,4 +76,9 @@ public class DogService {
     }
 
     
+    @RequestMapping(value = "/dogs/getDogsByNameLimit/{name}/{limit}", method = RequestMethod.GET)
+    public List<Dog> getDogsByNameLimit(@PathVariable String name, @PathVariable int limit){
+        return dogRepository.getDogsByNameLimit(name, limit);
+    }
+    
 }
