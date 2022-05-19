@@ -134,6 +134,7 @@ export default {
 
           //Se crea un marcador por cada punto
           let p =[point.latitude, point.longitude]
+          console.log(p);
           let marker = L.marker(p, {icon:myIcon}) //se define el ícono del marcador
           .bindPopup(point.name) //Se agrega un popup con el nombre
           
@@ -143,7 +144,7 @@ export default {
 
         //Los puntos de la lista se agregan al mapa
         this.points.forEach(p=>{
-          p.addTo(map)
+          p.addTo(this.mymap)
         })
       } catch (error) {
        console.log('error', error); 
