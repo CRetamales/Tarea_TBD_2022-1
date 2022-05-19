@@ -1,6 +1,7 @@
 package cl.tbd.ejemplo1.services;
 
 import cl.tbd.ejemplo1.models.Dog;
+import cl.tbd.ejemplo1.models.Resultados;
 import cl.tbd.ejemplo1.models.Regionname;
 import cl.tbd.ejemplo1.repositories.DogRepository;
 
@@ -76,7 +77,7 @@ public class DogService {
     }
     
     @RequestMapping(value = "/dogs/getDogsByNameLimit/{name}/{limit}", method = RequestMethod.GET)
-    public List<Dog> getDogsByNameLimit(@PathVariable String name, @PathVariable int limit){
+    public List<Resultados> getDogsByNameLimit(@PathVariable String name, @PathVariable int limit){
         return dogRepository.getDogsByNameLimit(name, limit);
     }
 
