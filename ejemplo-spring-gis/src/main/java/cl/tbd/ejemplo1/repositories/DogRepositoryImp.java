@@ -83,18 +83,20 @@ public class DogRepositoryImp implements DogRepository {
         "FROM division_regional_4326 AS t WHERE t.gid = 5;";
         return null;
     }
-
+    /*
     @Override
-    public List<Dog> getAllDogsRegion(int region){
+    public List<Dog> getAllDogsRegion(int cod_regi){
         
         try(Connection conn = sql2o.open())
         {
             
-            final String query = "SELECT dog.* FROM dog JOIN division_regional as regiones ON ST_Intersects(regiones.geom, ST_Transform(dog.location, 32719)) WHERE regiones.cod_regi=13;";
+            final String query = "SELECT dog.id, dog.name, dog.longitude, dog.latitude, dog.location FROM dog JOIN division_regional as regiones ON ST_Intersects(regiones.geom, ST_Transform(dog.location, 32719)) WHERE regiones.cod_regi=13;";
             
-            /*return conn.createQuery(query)
-                .addParameter("region",region)
-                .executeAndFetch(Dog.class);*/
+            return conn.createQuery(query)
+                .addParameter("region",cod_regi)
+                .executeAndFetch(Dog.class);
+        
+            
             System.out.println("Hola Mundo");
             List<Dog> a = conn.createQuery(query).executeAndFetch(Dog.class);
             System.out.println("Hola Mundo");
@@ -102,6 +104,20 @@ public class DogRepositoryImp implements DogRepository {
             
 
         }catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    */
+
+    @Override
+    public List<Dog> getAllDogsRegion(int cod_regi) {
+        try(Connection conn = sql2o.open()){
+            final String query = "SELECT dog.id, dog.name, dog.longitude, dog.latitude  FROM dog JOIN division_regional as regiones ON ST_Intersects(regiones.geom, ST_Transform(dog.location, 32719)) WHERE regiones.cod_regi=:valor;";
+            return conn.createQuery(query)
+                    .addParameter("valor",cod_regi)
+                    .executeAndFetch(Dog.class);
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }

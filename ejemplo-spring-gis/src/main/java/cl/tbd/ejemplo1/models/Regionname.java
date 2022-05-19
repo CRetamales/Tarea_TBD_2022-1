@@ -17,8 +17,8 @@ public class Regionname {
         return cod_regi;
     }
 
-    public void setRegion(int region) {
-        this.cod_regi = region;
+    public void setRegion(int cod_regi) {
+        this.cod_regi = cod_regi;
     }
 
 
