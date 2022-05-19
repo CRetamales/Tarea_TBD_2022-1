@@ -74,11 +74,14 @@ public class DogService {
     public List<Dog> getAllDogsRegion(@PathVariable int region){
         return dogRepository.getAllDogsRegion(region);
     }
-
     
     @RequestMapping(value = "/dogs/getDogsByNameLimit/{name}/{limit}", method = RequestMethod.GET)
     public List<Dog> getDogsByNameLimit(@PathVariable String name, @PathVariable int limit){
         return dogRepository.getDogsByNameLimit(name, limit);
     }
-    
+
+    @RequestMapping(value = "/dogs/getDogsByRadio/{name}/{radio}", method = RequestMethod.GET)
+    public List<Dog> getDogsByRadio(@PathVariable String name, @PathVariable int radio){
+        return dogRepository.getDogsByRadio(name, radio);
+    }
 }

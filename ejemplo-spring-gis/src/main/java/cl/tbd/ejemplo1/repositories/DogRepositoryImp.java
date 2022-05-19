@@ -109,7 +109,7 @@ public class DogRepositoryImp implements DogRepository {
 
 
     @Override
-    public List<Dog> getDogsByNameLimit (String nombrePerro, int cantidadPerros) {
+    public List<Dog> getDogsByNameLimit(String nombrePerro, int cantidadPerros) {
         try(Connection conn = sql2o.open()){
             String query = "SELECT d1.id AS id1, d2.id AS id2" +
             "(SELECT ST_Distance(ST_GeogFromText('SRID=4326;POINT(' || d1.longitude || ' ' || d1.latitude || ')'), ST_GeogFromText( 'SRID=4326;POINT(' || d2.longitude || ' ' || d2.latitude || ')')) AS distancia"+
@@ -127,6 +127,27 @@ public class DogRepositoryImp implements DogRepository {
             System.out.println(e.getMessage());
             return null;
         }
+    }
 
+
+    @Override
+    public List<Dog> getDogsByRadio(String nombrePerro, int radio){
+        try(Connection conn = sql2o.open()){
+            String query = "SELECT id2, distancia" +
+            "FROM ( SELECT d1.id AS id1, d2.id AS id2" +
+            "(SELECT ST_Distance(ST_GeogFromText('SRID=4326;POINT(' || d1.longitude || ' ' || d1.latitude || ')'), ST_GeogFromText( 'SRID=4326;POINT(' || d2.longitude || ' ' || d2.latitude || ')')) AS distancia"+
+            "FROM dog AS d1"+
+            "JOIN dog AS d2 ON d1.id <> d2.id"+
+            "WHERE d1.name = :nombrePerro ) as resultados"+
+            "WHERE distancia <= :radio;";
+
+            return conn.createQuery(query)
+                .addParameter("nombrePerro",nombrePerro)
+                .addParameter("radio",radio)
+                .executeAndFetch(Dog.class);
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }
