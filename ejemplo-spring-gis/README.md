@@ -10,23 +10,16 @@ Ejemplo creado a con de [Spring Initializr](https://start.spring.io/) basado en 
 ### Instalación
 * Descargar el código fuente
 * En la línea de comandos, dirigirse a la carpeta del proyecto
-* Iniciar proyecto Gradle con el comando `gradlew` en Windows y con `/.gradlew` Linux/ Mac
+* Iniciar proyecto Gradle con el comando gradlew en Windows y con /.gradlew Linux/ Mac
 
-* Configurar URL de conexión en `application.resources`
+* Configurar URL de conexión a una base de datos existente, credenciales en application.resources 
 
-* Ejecutar proyecto de desarrollo con `gradlew runBoot`
+* Ejecutar proyecto de desarrollo con gradlew runBoot
 
-### Ejecutando la aplicación
-Al probar la dirección:
-```
-$ curl http://localhost:9000/hello
-```
-Debe retornar:
-```
-Hello World!
-```
+* Recordar de subir el division_regional.sql, antes de cualquier cosa
 
-
-
-
+### Puertos
+* Frontend : 8080
+* Backend : 3000
+* BD : 5432
 

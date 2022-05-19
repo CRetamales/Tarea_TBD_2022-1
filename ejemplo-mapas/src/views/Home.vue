@@ -7,9 +7,7 @@
       <option v-for="(region, key) in regiones" :key="region.region" :value="region.region">{{region.name}}</option>
     </select>
     
-    <div>{{point}} 
-      <input type="text" v-model="name" placeholder="nombre" />
-      <button type="button" @click="createPoint">Crear</button>
+    <div>{{point}}
     </div>
     <div>{{message}}</div>
     <div id="mapid"></div>
@@ -27,7 +25,7 @@
       <input type="text" v-model="cantidad" placeholder="Ej: 3"/>
       perros más cercanos a 
       <input type="text" v-model="name2" placeholder="Ej: campeon"/>
-      <button type="button" @click="createPoint">Consultar</button>
+      <button type="button" @click="setDogsLimit">Consultar</button>
     </div>
   </div>
 

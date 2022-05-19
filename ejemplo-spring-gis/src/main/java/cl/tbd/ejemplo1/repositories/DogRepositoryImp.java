@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 
 @Repository
 public class DogRepositoryImp implements DogRepository {
@@ -126,15 +128,28 @@ public class DogRepositoryImp implements DogRepository {
 
 
     @Override
-    public List<Resultados> getDogsByNameLimit(String nombrePerro, int cantidadPerros) {
+    public List<Dog> getDogsByNameLimit(String nombrePerro, int cantidadPerros) {
         try(Connection conn = sql2o.open()){
-            String query = "Select id, nombre as name,SELECT d2.id AS id, d2.name AS nombre, d2.latitude AS latitude, d2.longitude AS longitude, (SELECT ST_Distance(ST_GeogFromText('SRID=4326;POINT('||d1.latitude||' '||d1.longitude||')'),ST_GeogFromText('SRID=4326;POINT('||d2.latitude||' '||d2.longitude||')'))) as distancia FROM dog AS d1 JOIN dog AS d2 ON d1.id <> d2.id WHERE d1.name=:nombrePerro ORDER BY distancia LIMIT :cantidadPerros;";
-                
+            String query2 = "SELECT id, name, longitude, latitude FROM dog WHERE name=:nombrePerro";
 
-            return conn.createQuery(query)
+            String query = "Select id, nombre as name, longitude, latitude from (SELECT d2.id AS id, d2.name AS nombre, d2.latitude AS latitude, d2.longitude AS longitude, (SELECT ST_Distance(ST_GeogFromText('SRID=4326;POINT('||d1.latitude||' '||d1.longitude||')'),ST_GeogFromText('SRID=4326;POINT('||d2.latitude||' '||d2.longitude||')'))) as distancia FROM dog AS d1 JOIN dog AS d2 ON d1.id <> d2.id WHERE d1.name=:nombrePerro ORDER BY distancia LIMIT :cantidadPerros) as resultado;";
+            
+            List<Dog> a1 = conn.createQuery(query)
                 .addParameter("nombrePerro",nombrePerro)
                 .addParameter("cantidadPerros",cantidadPerros)
-                .executeAndFetch(Resultados.class);
+                .executeAndFetch(Dog.class);
+                
+            List<Dog> a2 = conn.createQuery(query2)
+                .addParameter("nombrePerro",nombrePerro)
+                .executeAndFetch(Dog.class);
+
+            
+            List<Dog> resultado = new ArrayList<Dog>();
+
+            resultado.addAll(a1);
+            resultado.addAll(a2);
+
+            return resultado;
 
         } catch(Exception e){
             System.out.println(e.getMessage());
@@ -146,12 +161,26 @@ public class DogRepositoryImp implements DogRepository {
     @Override
     public List<Dog> getDogsByRadio(String nombrePerro, int radio){
         try(Connection conn = sql2o.open()){
+            String query2 = "SELECT id, name, longitude, latitude FROM dog WHERE name=:nombrePerro";
+
             String query = "Select id, nombre as name, longitude, latitude FROM (SELECT d1.id AS id1, d2.id AS id, d2.name AS nombre, d2.latitude AS latitude, d2.longitude AS longitude, (SELECT ST_Distance(ST_GeogFromText('SRID=4326;POINT('||d1.latitude||' '||d1.longitude||')'),ST_GeogFromText('SRID=4326;POINT('||d2.latitude||' '||d2.longitude||')'))) AS distancia FROM dog AS d1 JOIN dog AS d2 ON d1.id <> d2.id WHERE d1.name=:nombrePerro ORDER BY distancia) AS resultados WHERE distancia <= :radio;";
             
-            return conn.createQuery(query)
+            List<Dog> a1 = conn.createQuery(query)
                 .addParameter("nombrePerro",nombrePerro)
                 .addParameter("radio",radio)
                 .executeAndFetch(Dog.class);
+                
+            List<Dog> a2 = conn.createQuery(query2)
+                .addParameter("nombrePerro",nombrePerro)
+                .executeAndFetch(Dog.class);
+
+            
+            List<Dog> resultado = new ArrayList<Dog>();
+
+            resultado.addAll(a1);
+            resultado.addAll(a2);
+
+            return resultado;
 
         } catch(Exception e){
             System.out.println(e.getMessage());
