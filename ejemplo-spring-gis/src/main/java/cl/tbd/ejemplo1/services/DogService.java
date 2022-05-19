@@ -1,6 +1,7 @@
 package cl.tbd.ejemplo1.services;
 
 import cl.tbd.ejemplo1.models.Dog;
+import cl.tbd.ejemplo1.models.Regionname;
 import cl.tbd.ejemplo1.repositories.DogRepository;
 
 import org.postgis.Geometry;
@@ -48,6 +49,12 @@ public class DogService {
             return null;
         }
          
+    }
+
+    @GetMapping("/dogs/regions")
+    public List<Regionname> getAllRegion()
+    {
+        return dogRepository.getAllRegion();
     }
 
     @GetMapping("/dogs/count")

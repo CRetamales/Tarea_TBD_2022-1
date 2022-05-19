@@ -1,6 +1,7 @@
 package cl.tbd.ejemplo1.repositories;
 
 import cl.tbd.ejemplo1.models.Dog;
+import cl.tbd.ejemplo1.models.Regionname;
 
 import org.postgis.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,18 @@ public class DogRepositoryImp implements DogRepository {
             return conn.createQuery(query)
                     .executeAndFetch(Dog.class);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Regionname> getAllRegion(){
+        try(Connection conn = sql2o.open())
+        {
+            String query = "SELECT DISTINCT nom_reg FROM division_regional WHERE nom_reg IS NOT NULL AND NOT nom_reg = 'Zona sin demarcar' ORDER BY nom_reg ASC;";
+            return conn.createQuery(query).executeAndFetch(Regionname.class);
+        }catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
