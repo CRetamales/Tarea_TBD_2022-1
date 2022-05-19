@@ -14,13 +14,19 @@
     <div>{{message}}</div>
     <div id="mapid"></div>
     <div>
-      Que perros son los más cercanos:
-      <input type="text" v-model="name" placeholder="Ej: 2" />
-      <button type="button" @click="createPoint">Consultar</button>
+      Qué perros son los más cercanos a:
+      <input type="text" v-model="name1" placeholder="Ej: campeon"/>
+      en un radio de 
+      <input type="text" v-model="metros" placeholder="Ej: 100000"/>
+      Metros 
+      <button type="button" @click="setDogsRadio">Consultar</button>
     </div>
+
     <div>
-      Que perros hay en un radio (en mts):
-      <input type="text" v-model="name" placeholder="Ej: 500" />
+      Consultar acerca de los
+      <input type="text" v-model="cantidad" placeholder="Ej: 3"/>
+      perros más cercanos a 
+      <input type="text" v-model="name2" placeholder="Ej: campeon"/>
       <button type="button" @click="createPoint">Consultar</button>
     </div>
   </div>
@@ -51,6 +57,10 @@ export default {
       mymap:null, //objeto de mapa(DIV)
       selected:'',
       regiones:[],
+      metros:'',
+      cantidad:'',
+      name1:'',
+      name2:'',
     }
   },
   computed:{
@@ -159,7 +169,65 @@ export default {
         console.log('error', error); 
       }
       
-    }
+    },
+    async setDogsRadio(){
+      try{
+        
+        let response = await axios.get('http://localhost:3000/dogs/getDogsByRadio/'+this.name1+'/'+this.metros);
+        let dataPoints = response.data;
+        console.log(response.data);
+        this.clearMarkers(this.mymap);
+
+        //Se itera por los puntos
+        dataPoints.forEach(point => {
+
+          //Se crea un marcador por cada punto
+          let p =[point.latitude, point.longitude]
+          console.log(p);
+          let marker = L.marker(p, {icon:myIcon}) //se define el Ã­cono del marcador
+          .bindPopup(point.name) //Se agrega un popup con el nombre
+          
+          //Se agrega a la lista
+          this.points.push(marker);
+        });
+
+        //Los puntos de la lista se agregan al mapa
+        this.points.forEach(p=>{
+          p.addTo(this.mymap)
+        })
+      } catch (error) {
+       console.log('error', error); 
+      }
+    },
+    async setDogsLimit(){
+      try{
+        
+        let response = await axios.get('http://localhost:3000/dogs/getDogsByNameLimit/'+this.name2+'/'+this.cantidad);
+        let dataPoints = response.data;
+        console.log(response.data);
+        this.clearMarkers(this.mymap);
+
+        //Se itera por los puntos
+        dataPoints.forEach(point => {
+
+          //Se crea un marcador por cada punto
+          let p =[point.latitude, point.longitude]
+          console.log(p);
+          let marker = L.marker(p, {icon:myIcon}) //se define el Ã­cono del marcador
+          .bindPopup(point.name) //Se agrega un popup con el nombre
+          
+          //Se agrega a la lista
+          this.points.push(marker);
+        });
+
+        //Los puntos de la lista se agregan al mapa
+        this.points.forEach(p=>{
+          p.addTo(this.mymap)
+        })
+      } catch (error) {
+       console.log('error', error); 
+      }
+    },
   },
   mounted:function(){
     let _this = this;
