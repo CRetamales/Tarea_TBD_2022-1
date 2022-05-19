@@ -16,7 +16,7 @@
     <div>
       Busqueda por radio (en mts)
       <input type="text" v-model="consulta2" placeholder="Ej: 500" />
-      <button type="button" @click="createPoint">Consultar</button>
+      <button type="button" @click="consultarRadio">Consultar</button>
     </div>
   </div>
 
@@ -115,6 +115,41 @@ export default {
        console.log('error', error); 
       }
       
+    },
+    async consultarRadio(){
+      //puse un placeholder, la idea es saber donde tirar la consulta para que se ponga 1 marcador por cada perro que 
+      //este dentro del radio de busqueda
+      //no entregaremos una lista
+      //pondremos puntos en el mapa y actualizaremos
+      try {
+        //eliminamos todos los marcadores
+        this.clearMarkers(this.mymap);
+        //se llama el servicio 
+        /*let response = await axios.get('http://localhost:3000/dogs');
+        let dataPoints = response.data;*/
+        //Se itera por los puntos
+        /*Aqui ponemos el marcador del perro seleccionado
+        
+        */
+       //ponemos el resto de puntos segun la consulta
+        dataPoints.forEach(point => {
+
+          //Se crea un marcador por cada punto
+          let p =[point.latitude, point.longitude]
+          let marker = L.marker(p, {icon:myIcon}) //se define el ícono del marcador
+          .bindPopup(point.name) //Se agrega un popup con el nombre
+          
+          //Se agrega a la lista
+          this.points.push(marker);
+        });
+
+        //Los puntos de la lista se agregan al mapa
+        this.points.forEach(p=>{
+          p.addTo(map)
+        })
+      } catch (error) {
+       console.log('error', error); 
+      }
     }
   },
   mounted:function(){
