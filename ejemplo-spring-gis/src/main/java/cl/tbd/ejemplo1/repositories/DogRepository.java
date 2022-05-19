@@ -8,7 +8,7 @@ public interface DogRepository {
     public List<Dog> getAllDogs();
     public Dog createDog(Dog dog);
     public String getJson();
-    public List<Dog> getAllDogsRegion(String region);
+    public List<Dog> getAllDogsRegion(int region);
     public List<Regionname> getAllRegion();
     public List<Dog> getDogsByNameLimit (String nombrePerro, int cantidadPerros)
 }

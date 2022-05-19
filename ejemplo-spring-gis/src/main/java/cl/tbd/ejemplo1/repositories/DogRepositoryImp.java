@@ -43,7 +43,7 @@ public class DogRepositoryImp implements DogRepository {
     public List<Regionname> getAllRegion(){
         try(Connection conn = sql2o.open())
         {
-            String query = "SELECT DISTINCT nom_reg FROM division_regional WHERE nom_reg IS NOT NULL AND NOT nom_reg = 'Zona sin demarcar' ORDER BY nom_reg ASC;";
+            String query = "SELECT DISTINCT nom_reg, cod_regi FROM division_regional WHERE nom_reg IS NOT NULL AND NOT nom_reg = 'Zona sin demarcar' ORDER BY nom_reg ASC;";
             return conn.createQuery(query).executeAndFetch(Regionname.class);
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -85,18 +85,21 @@ public class DogRepositoryImp implements DogRepository {
     }
 
     @Override
-    public List<Dog> getAllDogsRegion(String region){
+    public List<Dog> getAllDogsRegion(int region){
+        
         try(Connection conn = sql2o.open())
         {
-            String query = "SELECT dog.*" +
-            "FROM dog"+
-            "JOIN division_regional as regiones"+
-            "ON ST_Intersects(regiones.geom, ST_Transform(dog.location, 32719))"+
-            "WHERE regiones.nom_reg=:region;";
-
-            return conn.createQuery(query)
+            
+            final String query = "SELECT dog.* FROM dog JOIN division_regional as regiones ON ST_Intersects(regiones.geom, ST_Transform(dog.location, 32719)) WHERE regiones.cod_regi=13;";
+            
+            /*return conn.createQuery(query)
                 .addParameter("region",region)
-                .executeAndFetch(Dog.class);
+                .executeAndFetch(Dog.class);*/
+            System.out.println("Hola Mundo");
+            List<Dog> a = conn.createQuery(query).executeAndFetch(Dog.class);
+            System.out.println("Hola Mundo");
+            return a;
+            
 
         }catch(Exception e){
             System.out.println(e.getMessage());

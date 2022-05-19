@@ -2,9 +2,9 @@
   <div class="home">
     <h1>Dónde está mi perro</h1>
     <span>Seleccionado: {{ selected }}</span>
-    <select v-model="selected">
+    <select v-model="selected" @click="selected" @change="setDogsRegion(selected)">
       <option disabled value="">Seleccione una Región</option>
-      <option v-for="region in regiones">{{region}}</option>
+      <option v-for="(region, key) in regiones" :key="region.region" :value="region.region">{{region.name}}</option>
     </select>
     
     <div>{{point}} 
@@ -15,12 +15,12 @@
     <div id="mapid"></div>
     <div>
       Que perros son los más cercanos:
-      <input type="text" v-model="consulta2" placeholder="Ej: 2" />
+      <input type="text" v-model="name" placeholder="Ej: 2" />
       <button type="button" @click="createPoint">Consultar</button>
     </div>
     <div>
       Que perros hay en un radio (en mts):
-      <input type="text" v-model="consulta2" placeholder="Ej: 500" />
+      <input type="text" v-model="name" placeholder="Ej: 500" />
       <button type="button" @click="createPoint">Consultar</button>
     </div>
   </div>
@@ -98,8 +98,8 @@ export default {
     async getPoints(map){
       try {
         //se llama el servicio 
-        /*let response = await axios.get('http://localhost:3000/dogs');
-        let dataPoints = response.data;*/
+        let response = await axios.get('http://localhost:3000/dogs');
+        let dataPoints = response.data;
         //Se itera por los puntos
         dataPoints.forEach(point => {
 
@@ -121,9 +121,37 @@ export default {
       }
       
     },
-    async getRegions(){
+    async setDogsRegion(){
       try{
-        let response = await axios.get('http://localhost:3000/dogs/region');
+        
+        let response = await axios.get('http://localhost:3000/dogs/getAllDogsRegion/'+this.selected);
+        let dataPoints = response.data;
+        console.log(response.data);
+        this.clearMarkers(this.mymap);
+
+        //Se itera por los puntos
+        dataPoints.forEach(point => {
+
+          //Se crea un marcador por cada punto
+          let p =[point.latitude, point.longitude]
+          let marker = L.marker(p, {icon:myIcon}) //se define el ícono del marcador
+          .bindPopup(point.name) //Se agrega un popup con el nombre
+          
+          //Se agrega a la lista
+          this.points.push(marker);
+        });
+
+        //Los puntos de la lista se agregan al mapa
+        this.points.forEach(p=>{
+          p.addTo(map)
+        })
+      } catch (error) {
+       console.log('error', error); 
+      }
+    },
+    async getRegiones(){
+      try{
+        let response = await axios.get('http://localhost:3000/dogs/regions');
         this.regiones = response.data;
         console.log(response.data); 
       } catch (error) {
@@ -150,7 +178,12 @@ export default {
 
     //Se agregan los puntos mediante llamada al servicio
     this.getPoints(this.mymap);
-  }
+  },
+  //Función que se ejecuta al cargar el componente
+  created:function(){
+    this.getRegiones();
+    this.getPoints(this.mymap);
+  },
 }
 </script>
 <style>

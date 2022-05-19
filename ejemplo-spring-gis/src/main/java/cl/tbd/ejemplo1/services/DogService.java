@@ -70,9 +70,9 @@ public class DogService {
         return result;
     }
 
-    @RequestMapping(value = "/dogs/getAllDogsRegion/{name}", method = RequestMethod.GET)
-    public List<Dog> getAllDogsRegion(@PathVariable String name){
-        return dogRepository.getAllDogsRegion(name);
+    @RequestMapping(value = "/dogs/getAllDogsRegion/{region}", method = RequestMethod.GET)
+    public List<Dog> getAllDogsRegion(@PathVariable int region){
+        return dogRepository.getAllDogsRegion(region);
     }
 
     
